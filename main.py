@@ -1,16 +1,34 @@
-# This is a sample Python script.
+import snap
+import networkx as nx
 
-# Press Maiusc+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Funzione per convertire un grafo NetworkX in un grafo SNAP
+def nx_to_snap(nx_graph):
+    snap_graph = snap.TUNGraph.New()
+    for node in nx_graph.nodes():
+        snap_graph.AddNode(node)
+    for edge in nx_graph.edges():
+        snap_graph.AddEdge(edge[0], edge[1])
+    return snap_graph
 
+# Carica il grafo da un file GML utilizzando NetworkX
+nx_graph = nx.read_gml("risorse/karate.gml", label=None)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+# Converti il grafo NetworkX in un grafo SNAP
+snap_graph = nx_to_snap(nx_graph)
 
+# Visualizza alcune informazioni sul grafo SNAP
+print("Numero di nodi:", snap_graph.GetNodes())
+print("Numero di archi:", snap_graph.GetEdges())
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+# Esempio di alcune operazioni sul grafo SNAP
+for NI in snap_graph.Nodes():
+    print("Nodo %d ha %d archi" % (NI.GetId(), NI.GetDeg()))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+# Salvare il grafo in un file binario
+FOut = snap.TFOut("graph.graph")
+snap_graph.Save(FOut)
+FOut.Flush()
+
+# Caricare il grafo dal file binario
+FIn = snap.TFIn("graph.graph")
+graph_loaded = snap.TUNGraph.Load(FIn)
