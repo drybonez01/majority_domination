@@ -1,16 +1,17 @@
 import snap
 import random
-import networkx as nx
-import matplotlib.pyplot as plt
 
-# Funzione per convertire un grafo SNAP in un grafo NetworkX
-def snap_to_nx(snap_graph):
-    nx_graph = nx.Graph()
-    for NI in snap_graph.Nodes():
-        nx_graph.add_node(NI.GetId())
-    for EI in snap_graph.Edges():
-        nx_graph.add_edge(EI.GetSrcNId(), EI.GetDstNId())
-    return nx_graph
+# Carica il grafo dal file binario .graph
+FIn = snap.TFIn("graph/graph.graph")
+snap_graph = snap.TUNGraph.Load(FIn)
+
+# Visualizza alcune informazioni sul grafo
+print("Numero di nodi:", snap_graph.GetNodes())
+print("Numero di archi:", snap_graph.GetEdges())
+
+# Esempio di alcune operazioni sul grafo
+for NI in snap_graph.Nodes():
+    print("Nodo %d ha %d archi" % (NI.GetId(), NI.GetDeg()))
 
 # Funzione per assegnare pesi randomici ai nodi
 def assign_random_weights_to_snap(snap_graph, weight_range=(1, 10)):
@@ -19,26 +20,22 @@ def assign_random_weights_to_snap(snap_graph, weight_range=(1, 10)):
         weights[NI.GetId()] = random.randint(*weight_range)
     return weights
 
-# Carica il grafo da un file binario
-FIn = snap.TFIn("graph/graph.graph")
-snap_graph = snap.TUNGraph.Load(FIn)
-
 # Assegna pesi randomici ai nodi
 node_weights = assign_random_weights_to_snap(snap_graph, weight_range=(1, 10))
 
-# Converte il grafo SNAP in un grafo NetworkX
-nx_graph = snap_to_nx(snap_graph)
+# Visualizza i pesi assegnati
+print("\nPesi assegnati ai nodi:")
+for node_id, weight in node_weights.items():
+    print(f"Nodo {node_id}: Peso {weight}")
 
-# Aggiungi i pesi come attributi ai nodi nel grafo NetworkX
-nx.set_node_attributes(nx_graph, node_weights, 'weight')
+# Salva il grafo con pesi in un file .graph (opzionale)
+# In SNAP, i pesi non vengono memorizzati direttamente, quindi se vuoi salvarli,
+# devi gestire manualmente l'associazione nodo-peso in un file separato o come attributo aggiuntivo.
+FOut = snap.TFOut("graph/graph_with_weights.graph")
+snap_graph.Save(FOut)
+FOut.Flush()
 
-# Visualizza il grafo con pesi
-pos = nx.spring_layout(nx_graph)  # layout del grafo
-plt.figure(figsize=(12, 8))  # dimensioni della figura
-
-# Disegna i nodi con i pesi come etichette
-node_labels = {node: f"{node}\n({data['weight']})" for node, data in nx_graph.nodes(data=True)}
-nx.draw(nx_graph, pos, with_labels=True, labels=node_labels, node_size=500, node_color="skyblue", font_size=10, font_color="black", edge_color="gray")
-
-plt.title("Visualizzazione del Grafo con Pesi Randomici")
-plt.show()
+# Puoi anche salvare i pesi in un file di testo separato (opzionale)
+with open("graph/informazioni/node_weights.txt", "w") as f:
+    for node_id, weight in node_weights.items():
+        f.write(f"{node_id}: {weight}\n")
