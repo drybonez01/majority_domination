@@ -11,7 +11,7 @@ def nx_to_snap(nx_graph):
     return snap_graph
 
 # Carica il grafo da un file GML utilizzando NetworkX
-nx_graph = nx.read_gml("risorse/karate.gml", label=None)
+nx_graph = nx.read_gml("risorse/as-22july06.gml", label=None)
 
 # Converti il grafo NetworkX in un grafo SNAP
 snap_graph = nx_to_snap(nx_graph)
@@ -25,10 +25,10 @@ for NI in snap_graph.Nodes():
     print("Nodo %d ha %d archi" % (NI.GetId(), NI.GetDeg()))
 
 # Salvare il grafo in un file binario
-FOut = snap.TFOut("graph.graph")
+FOut = snap.TFOut("internet.graph")
 snap_graph.Save(FOut)
 FOut.Flush()
 
 # Caricare il grafo dal file binario
-FIn = snap.TFIn("graph.graph")
+FIn = snap.TFIn("internet.graph")
 graph_loaded = snap.TUNGraph.Load(FIn)
