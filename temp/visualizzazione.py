@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # Carica il grafo da un file GML utilizzando NetworkX
-nx_graph = nx.read_gml("risorse/karate.gml", label=None)
+nx_graph = nx.read_gml("../risorse/karate.gml", label=None)
 
 # Visualizza il grafo
 pos = nx.spring_layout(nx_graph)  # layout del grafo

@@ -1,54 +1,54 @@
-import snap
+import networkx as nx
 import random
+import os
 
-# Funzione per caricare il grafo da un file binario .graph
+# Funzione per caricare il grafo da un file .gml
 def load_graph(filename):
-    FIn = snap.TFIn(filename)
-    return snap.TUNGraph.Load(FIn)
+    G = nx.read_gml(filename, label='id')
+    return G
 
 # Funzione per assegnare pesi randomici ai nodi
-def assign_random_weights_to_snap(snap_graph, weight_range):
+def assign_random_weights_to_networkx(graph, weight_range):
     weights = {}
-    for NI in snap_graph.Nodes():
-        weights[NI.GetId()] = random.randint(*weight_range)
+    for node in graph.nodes():
+        weights[node] = random.randint(*weight_range)
     return weights
 
-# Chiedi all'utente il percorso del file .graph
-graph_path = input("Inserisci il percorso del file .graph: ")
+def save_weights_to_file(weights, filename):
+    with open(filename, "w") as f:
+        for node_id, weight in weights.items():
+            f.write(f"{node_id} {weight}\n")
 
-# Carica il grafo
-snap_graph = load_graph(graph_path)
+def main():
+    # Chiedi all'utente il percorso del file .gml
+    graph_path = input("Inserisci il percorso del file .gml: ")
 
-# Visualizza alcune informazioni sul grafo
-print("Numero di nodi:", snap_graph.GetNodes())
-print("Numero di archi:", snap_graph.GetEdges())
+    # Carica il grafo
+    G = load_graph(graph_path)
 
-# Esempio di alcune operazioni sul grafo
-for NI in snap_graph.Nodes():
-    print("Nodo %d ha %d archi" % (NI.GetId(), NI.GetDeg()))
+    # Visualizza alcune informazioni sul grafo
+    print("Numero di nodi:", G.number_of_nodes())
+    print("Numero di archi:", G.number_of_edges())
 
-# Chiedi all'utente il range di valori dei pesi da assegnare
-weight_min = int(input("Inserisci il valore minimo del range dei pesi: "))
-weight_max = int(input("Inserisci il valore massimo del range dei pesi: "))
+    # Esempio di alcune operazioni sul grafo
+    for node in G.nodes():
+        print(f"Nodo {node} ha {G.degree(node)} archi")
 
-# Assegna pesi randomici ai nodi
-node_weights = assign_random_weights_to_snap(snap_graph, (weight_min, weight_max))
+    # Chiedi all'utente il range di valori dei pesi da assegnare
+    weight_min = int(input("Inserisci il valore minimo del range dei pesi: "))
+    weight_max = int(input("Inserisci il valore massimo del range dei pesi: "))
 
-# Visualizza i pesi assegnati
-print("\nPesi assegnati ai nodi:")
-for node_id, weight in node_weights.items():
-    print(f"Nodo {node_id}: Peso {weight}")
+    # Assegna pesi randomici ai nodi
+    node_weights = assign_random_weights_to_networkx(G, (weight_min, weight_max))
 
-# Salva il grafo con pesi in un file .graph (opzionale)
-# In SNAP, i pesi non vengono memorizzati direttamente, quindi se vuoi salvarli,
-# devi gestire manualmente l'associazione nodo-peso in un file separato o come attributo aggiuntivo.
-# output_graph_path = input("Inserisci il percorso per salvare il file .graph con pesi: ")
-# FOut = snap.TFOut(output_graph_path)
-# snap_graph.Save(FOut)
-# FOut.Flush()
-
-# Salva i pesi in un file di testo separato con il formato corretto
-weights_file_path = input("Inserisci il percorso per salvare il file dei pesi (node_weights.txt): ")
-with open(weights_file_path, "w") as f:
+    # Visualizza i pesi assegnati
+    print("\nPesi assegnati ai nodi:")
     for node_id, weight in node_weights.items():
-        f.write(f"{node_id} {weight}\n")  # Corretto formato: node_id weight
+        print(f"Nodo {node_id}: Peso {weight}")
+
+    # Salva i pesi in un file di testo separato
+    weights_file_path = input("Inserisci il percorso per salvare il file dei pesi (node_weights.txt): ")
+    save_weights_to_file(node_weights, weights_file_path)
+
+if __name__ == "__main__":
+    main()
