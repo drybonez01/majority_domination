@@ -13,45 +13,51 @@ def load_seed_set(filename):
             seed_set.add(line.strip())
     return seed_set
 
-def majority_influence_diffusion(G, seed_set):
-    influenced_set = set(seed_set)
-    new_influenced_set = set(seed_set)
-
+def majority_influence_diffusion(graph, initial_states):
+    # Copia degli stati iniziali per evitare di modificare l'input originale
+    states = initial_states.copy()
+    changed = True
     iteration = 0
-    while True:
-        next_influenced_set = set()
-        for node in G.nodes():
-            if node not in influenced_set:
-                neighbors = set(G.neighbors(node))
-                influenced_neighbors = neighbors.intersection(influenced_set)
-                # Debug: print neighbors and influenced neighbors
-                print(f"Node: {node}, Neighbors: {neighbors}, Influenced Neighbors: {influenced_neighbors}")
-                if len(influenced_neighbors) > len(neighbors) // 2:
-                    next_influenced_set.add(node)
 
-        # Debug: print the new influenced set after each iteration
-        print(f"Iteration {iteration}: {next_influenced_set}")
-        iteration += 1
+    while changed:
+        changed = False
+        new_states = states.copy()
 
-        if not next_influenced_set:
-            break
+        for node in graph:
+            neighbor_states = [states[neighbor] for neighbor in graph.neighbors(node)]
+            if neighbor_states:
+                majority_state = 1 if neighbor_states.count(1) > neighbor_states.count(0) else 0
+                if neighbor_states.count(1) == neighbor_states.count(0):
+                    majority_state = states[node]  # Mantenere lo stato corrente in caso di parità
 
-        new_influenced_set.update(next_influenced_set)
-        influenced_set.update(next_influenced_set)
+                if new_states[node] != majority_state:
+                    new_states[node] = majority_state
+                    changed = True
 
-    return influenced_set
+        if changed:
+            # Debug: stampa gli stati dei nodi influenzati dopo ogni iterazione
+            influenced_nodes = {node for node, state in new_states.items() if state == 1 and states[node] == 0}
+            print(f"Iteration {iteration}: {influenced_nodes}")
+            iteration += 1
+            states = new_states
+        else:
+            print(f"Iteration {iteration}: No changes")
 
-def save_expansion(expansion, algorithm_name, graph_name):
-    # Crea la cartella 'risorse' se non esiste
-    if not os.path.exists('risorse'):
-        os.makedirs('risorse')
+    return states
+
+def save_expansion_info(expansion, algorithm_name, graph_name):
+    # Crea la cartella 'risorse/informazioni' se non esiste
+    dir_path = os.path.join('risorse', 'informazioni')
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
 
     # Nome del file
-    file_name = f"expansion_{algorithm_name}_{graph_name}.txt"
-    file_path = os.path.join('risorse', file_name)
+    file_name = f"informazioni_{algorithm_name}_{graph_name}.txt"
+    file_path = os.path.join(dir_path, file_name)
 
     # Salva l'espansione nel file
     with open(file_path, 'w') as file:
+        file.write(f"Numero di nodi attivati: {len(expansion)}\n")
         for node in expansion:
             file.write(f"{node}\n")
 
@@ -67,11 +73,29 @@ def main():
     G = load_graph(graph_file)
     seed_set = load_seed_set(seed_set_file)
 
-    expansion = majority_influence_diffusion(G, seed_set)
+    # Converti tutti i nodi del grafo e del seed set in stringhe
+    G = nx.relabel_nodes(G, str)
+    seed_set = {str(node) for node in seed_set}
 
-    print(f"Espansione del seed set: {expansion}")
+    # Filtra i nodi del seed set che non sono nel grafo
+    seed_set = {node for node in seed_set if node in G.nodes()}
 
-    save_expansion(expansion, algorithm_name, graph_name)
+    # Imposta lo stato iniziale per ogni nodo (1 per i nodi nel seed set, 0 per gli altri)
+    initial_states = {node: 1 if node in seed_set else 0 for node in G.nodes()}
+
+    # Debug: stampa gli stati iniziali dei nodi nel seed set
+    initial_seed_set_states = {node: initial_states[node] for node in seed_set}
+    print(f"Initial seed set states: {set(initial_seed_set_states.keys())}")
+
+    # Applica l'algoritmo di diffusione dell'influenza
+    final_states = majority_influence_diffusion(G, initial_states)
+
+    # Ottieni l'espansione come l'insieme dei nodi influenzati (stato 1)
+    expansion = {node for node, state in final_states.items() if state == 1}
+
+    print(f"Numero totale di nodi attivati: {len(expansion)}")
+
+    save_expansion_info(expansion, algorithm_name, graph_name)
 
 if __name__ == "__main__":
     main()
