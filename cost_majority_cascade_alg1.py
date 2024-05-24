@@ -1,4 +1,5 @@
 import networkx as nx
+import os
 
 def load_graph(filename):
     # Carica il grafo dal file .gml usando networkx con label='id'
@@ -54,6 +55,19 @@ def cost_seeds_greedy(G, k, c):
 
     return Sp
 
+def save_seed_set_info(seed_set, graph_name):
+    dir_path = os.path.join('risorse', f'seedset_{graph_name}')
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    file_name = f"seedset_{graph_name}.txt"
+    file_path = os.path.join(dir_path, file_name)
+
+    with open(file_path, 'w') as file:
+        file.write(f"Seed set trovato: {len(seed_set)} nodi\n")
+        for node in seed_set:
+            file.write(f"{node}\n")
+
 def main():
     graph_file = input("Inserisci il percorso del file del grafo (.gml): ")
     cost_file = input("Inserisci il percorso del file dei costi (.txt): ")
@@ -62,9 +76,13 @@ def main():
     G = load_graph(graph_file)
     c = load_costs(cost_file)
 
+    graph_name = os.path.splitext(os.path.basename(graph_file))[0]
+
     Sp = cost_seeds_greedy(G, k, c)
 
     print("Seed set massimale trovato:", Sp)
+
+    save_seed_set_info(Sp, graph_name)
 
 if __name__ == "__main__":
     main()
