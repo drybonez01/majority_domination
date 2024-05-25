@@ -56,15 +56,14 @@ def cost_seeds_greedy(G, k, c):
     return Sp
 
 def save_seed_set_info(seed_set, graph_name):
-    dir_path = os.path.join('risorse', f'seedset_{graph_name}')
+    dir_path = os.path.join('risorse', 'seedset')
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
 
-    file_name = f"seedset_{graph_name}.txt"
+    file_name = f"seedset_{graph_name}_alg1.txt"
     file_path = os.path.join(dir_path, file_name)
 
     with open(file_path, 'w') as file:
-        file.write(f"Seed set trovato: {len(seed_set)} nodi\n")
         for node in seed_set:
             file.write(f"{node}\n")
 
