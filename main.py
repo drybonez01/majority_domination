@@ -8,7 +8,18 @@ from methods.seedset_alg3 import seedset_alg3
 from methods.majority_influence_diffusion import majority_influence_diffusion
 
 if len(sys.argv) > 1:
-    if sys.argv[1] == "-w" or sys.argv[1] == "--weightDef":
+    if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+        print("Per eseguire tutti gli step sequenzialmente:")
+        print("\tpython main.py")
+        print("\nPer definire i costi della rete:")
+        print("\tpython main.py -w (path_to_graph)")
+        print("\nPer eseguire rispettivamente il primo, il secondo o il terzo algoritmo per calcolare il seed set:")
+        print("\tpython main.py -s1 (path_to_graph) (path_to_weights)")
+        print("\tpython main.py -s2 (path_to_graph) (path_to_weights)")
+        print("\tpython main.py -s3 (path_to_graph) (path_to_weights)")
+        print("\nPer calcolare l'influenza di uno specifico seed set:")
+        print("\tpython main.py -m (path_to_graph) (path_to_seedset)")
+    elif sys.argv[1] == "-w" or sys.argv[1] == "--weightDef":
         try:
             weightDef(sys.argv[2])
         except:
