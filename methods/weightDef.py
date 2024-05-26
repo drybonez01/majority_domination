@@ -72,7 +72,7 @@ def weightDef(graph_path):
 
     graph_name = os.path.splitext(os.path.basename(graph_path))[0]
     weights_file_name = f"{graph_name}_node_weights_{file_suffix}.txt"
-    weights_file_path = os.path.join('risorse', 'weights', weights_file_name)
+    weights_file_path = os.path.join('../risorse', 'weights', weights_file_name)
     os.makedirs(os.path.dirname(weights_file_path), exist_ok=True)
     save_weights_to_file(node_weights, weights_file_path)
 
