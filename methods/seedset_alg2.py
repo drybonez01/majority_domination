@@ -75,7 +75,7 @@ def seedset_alg2(graph_file, cost_file):
 
     '''graph_file = input("Inserisci il percorso del file del grafo (.gml): ")
     cost_file = input("Inserisci il percorso del file dei costi (.txt): ")'''
-    k = float(input("Inserisci il valore di k: "))
+    k = float(input("\nInserisci il valore di k (budget): "))
 
     G = load_graph(graph_file)
     c = load_costs(cost_file)
