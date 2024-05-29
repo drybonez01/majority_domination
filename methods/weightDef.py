@@ -4,7 +4,7 @@ import os
 import math
 
 
-def weightDef(graph_path):
+def weightDef(graph_path, working_dir):
     def load_graph(filename):
         graph = nx.read_gml(filename, label='id')
         return graph
@@ -31,8 +31,6 @@ def weightDef(graph_path):
         with open(filename, "w") as f:
             for node_id, weight in weights.items():
                 f.write(f"{node_id} {weight}\n")
-
-    # graph_path = input("Inserisci il percorso del file .gml: ")
 
     g = load_graph(graph_path)
 
@@ -72,7 +70,8 @@ def weightDef(graph_path):
 
     graph_name = os.path.splitext(os.path.basename(graph_path))[0]
     weights_file_name = f"{graph_name}_node_weights_{file_suffix}.txt"
-    weights_file_path = os.path.join('../risorse', 'weights', weights_file_name)
+    weights_file_path = os.path.join(working_dir, f"risorse", f"weights", weights_file_name)
+    print(weights_file_path)
     os.makedirs(os.path.dirname(weights_file_path), exist_ok=True)
     save_weights_to_file(node_weights, weights_file_path)
 

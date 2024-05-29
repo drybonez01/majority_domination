@@ -2,7 +2,7 @@ import networkx as nx
 import os
 
 
-def seedset_alg1(graph_file, cost_file):
+def seedset_alg1(graph_file, cost_file, working_dir):
     def load_graph(filename):
         # Carica il grafo dal file .gml usando networkx con label='id'
         g = nx.read_gml(filename, label='id')
@@ -58,21 +58,14 @@ def seedset_alg1(graph_file, cost_file):
         return Sp
 
     def save_seed_set_info(seed_set, graph_name):
-        dir_path = os.path.join('../risorse', 'seedset')
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
-
         file_name = f"seedset_{graph_name}_alg1.txt"
-        file_path = os.path.join(dir_path, file_name)
+        file_path = os.path.join(working_dir, f"risorse", f"seedset", file_name)
 
         with open(file_path, 'w') as file:
             for node in seed_set:
                 file.write(f"{node}\n")
 
         return file_path
-
-    '''graph_file = input("Inserisci il percorso del file del grafo (.gml): ")
-    cost_file = input("Inserisci il percorso del file dei costi (.txt): ")'''
 
     k = float(input("\nInserisci il valore di k (budget): "))
 

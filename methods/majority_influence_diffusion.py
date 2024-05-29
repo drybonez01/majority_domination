@@ -2,7 +2,7 @@ import networkx as nx
 import os
 
 
-def majority_influence_diffusion(graph_file, seed_set_file):
+def majority_influence_diffusion(graph_file, seed_set_file, working_dir):
     def load_graph(filename):
         G = nx.read_gml(filename, label='id')
         return G
@@ -52,20 +52,13 @@ def majority_influence_diffusion(graph_file, seed_set_file):
         return influenced_nodes_set, total_influenced
 
     def save_influenced_info(influenced_nodes, algorithm_name, graph_name):
-        dir_path = os.path.join('../risorse', 'informazioni')
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
-
         file_name = f"informazioni_{algorithm_name}_{graph_name}.txt"
-        file_path = os.path.join(dir_path, file_name)
+        file_path = os.path.join(working_dir, f"risorse", f"informazioni", file_name)
 
         with open(file_path, 'w') as file:
             file.write(f"Numero di nodi influenzati: {len(influenced_nodes)}\n")
             for node in influenced_nodes:
                 file.write(f"{node}\n")
-
-    '''graph_file = input("Inserisci il percorso del file del grafo (.gml): ")
-    seed_set_file = input("Inserisci il percorso del file del seed set (.txt): ")'''
 
     graph_name = os.path.splitext(os.path.basename(graph_file))[0]
     algorithm_name = os.path.splitext(os.path.basename(__file__))[0]
