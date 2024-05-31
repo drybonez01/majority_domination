@@ -57,8 +57,8 @@ def seedset_alg1(graph_file, cost_file, working_dir):
 
         return Sp
 
-    def save_seed_set_info(seed_set, graph_name):
-        file_name = f"seedset_{graph_name}_alg1.txt"
+    def save_seed_set_info(seed_set, graph_name, k):
+        file_name = f"seedset_{graph_name}_alg1_budget{k}.txt"
         file_path = os.path.join(working_dir, f"risorse", f"seedset", file_name)
 
         with open(file_path, 'w') as file:
@@ -78,4 +78,4 @@ def seedset_alg1(graph_file, cost_file, working_dir):
 
     print("Seed set massimale trovato:", Sp)
 
-    return save_seed_set_info(Sp, graph_name)
+    return save_seed_set_info(Sp, graph_name, k)

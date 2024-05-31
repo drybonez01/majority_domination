@@ -83,5 +83,5 @@ def process_gml_files(directory):
 
 
 # Percorso della cartella con i file .gml
-directory_path = r'C:\Users\josef\OneDrive\Desktop\Datasets\gmls'
+directory_path = r'C:\Users\Josef\Desktop\Nuova cartella'
 process_gml_files(directory_path)
