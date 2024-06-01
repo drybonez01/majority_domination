@@ -1,0 +1,6 @@
+Numero di nodi influenzati: 5
+35
+59
+15
+56
+29

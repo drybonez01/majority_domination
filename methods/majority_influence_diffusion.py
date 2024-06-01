@@ -53,7 +53,7 @@ def majority_influence_diffusion(graph_file, seed_set_file, working_dir):
 
     def save_influenced_info(influenced_nodes, algorithm_name, graph_name):
         file_name = f"informazioni_{algorithm_name}_{graph_name}_{time.time()}.txt"
-        file_path = os.path.join(working_dir, f"risorse", f"informazioni", file_name)
+        file_path = os.path.join(working_dir, f"risorse", f"risultati_influenze", file_name)
 
         with open(file_path, 'w') as file:
             file.write(f"Numero di nodi influenzati: {len(influenced_nodes)}\n")

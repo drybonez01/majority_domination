@@ -22,10 +22,12 @@ def weightDef(graph_path, working_dir):
             weights[node] = math.ceil(degree / 2)
         return weights
 
+
     def assign_betweenness_based_weights(graph):
         betweenness = nx.betweenness_centrality(graph)
-        weights = {node: math.ceil(value * 100) for node, value in betweenness.items()}
+        weights = {node: max(math.ceil(value * 100), 1) for node, value in betweenness.items()}
         return weights
+
 
     def save_weights_to_file(weights, filename):
         with open(filename, "w") as f:
