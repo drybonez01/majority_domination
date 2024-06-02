@@ -1,4 +1,4 @@
 Numero di nodi influenzati: 3
-50
 12
 48
+50

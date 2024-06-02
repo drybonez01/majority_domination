@@ -28,18 +28,21 @@ else:
             file_path = os.path.join(directory_path, filename)
             influenced_nodes_counts.append(read_influenced_nodes(file_path))
 
-    # Generate x values (assuming they represent different scenarios)
-    x_values = range(1, len(influenced_nodes_counts) + 1)
+    # Define the x values and labels for the x-axis
+    x_values = range(1, 6)
+    x_labels = ['5%', '7.5%', '10%', '15%', '20%']
 
     # Plot the data
     plt.figure(figsize=(10, 6))
     plt.plot(x_values, influenced_nodes_counts, marker='o', linestyle='-', color='b')
 
     # Adding titles and labels
-    plt.title('Numero di nodi influenzati con varaizione di budget')
-    plt.xlabel('Budget')
+    plt.xlabel('Budget (%)')
     plt.ylabel('Numero di nodi influenzati')
     plt.grid(True)
+
+    # Set x-axis ticks and labels to the defined percentages
+    plt.xticks(ticks=x_values, labels=x_labels)
 
     # Save the plot
     output_file = os.path.join(output_directory, "grafico.png")

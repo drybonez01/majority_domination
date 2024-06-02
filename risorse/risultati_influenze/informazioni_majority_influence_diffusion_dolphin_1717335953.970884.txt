@@ -1,6 +1,6 @@
 Numero di nodi influenzati: 5
+48
 12
 31
-22
-48
 50
+22
