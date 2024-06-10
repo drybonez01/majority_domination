@@ -2,6 +2,7 @@ import networkx as nx
 import os
 import time
 
+
 def majority_influence_diffusion(graph_file, seed_set_file, working_dir):
     def load_graph(filename):
         G = nx.read_gml(filename, label='id')
@@ -18,8 +19,8 @@ def majority_influence_diffusion(graph_file, seed_set_file, working_dir):
         states = initial_states.copy()
         changed = True
         iteration = 0
-        total_influenced = 0  # Contatore dei nodi influenzati
-        influenced_nodes_set = set()  # Set dei nodi influenzati
+        total_influenced = 0
+        influenced_nodes_set = set()
 
         while changed:
             changed = False
@@ -27,13 +28,13 @@ def majority_influence_diffusion(graph_file, seed_set_file, working_dir):
 
             for node in graph:
                 if node in seed_set or states[node] == 1:
-                    continue  # Ignora i nodi già influenzati o appartenenti al seed set
+                    continue
 
                 neighbor_states = [states[neighbor] for neighbor in graph.neighbors(node)]
                 if neighbor_states:
                     majority_state = 1 if neighbor_states.count(1) > neighbor_states.count(0) else 0
                     if neighbor_states.count(1) == neighbor_states.count(0):
-                        majority_state = states[node]  # Mantenere lo stato corrente in caso di parità
+                        majority_state = states[node]
 
                     if new_states[node] != majority_state:
                         new_states[node] = majority_state
@@ -41,8 +42,8 @@ def majority_influence_diffusion(graph_file, seed_set_file, working_dir):
 
             if changed:
                 influenced_nodes = {node for node, state in new_states.items() if state == 1 and states[node] == 0}
-                influenced_nodes_set.update(influenced_nodes)  # Aggiungi i nodi influenzati al set
-                total_influenced = len(influenced_nodes_set)  # Aggiorna il contatore
+                influenced_nodes_set.update(influenced_nodes)
+                total_influenced = len(influenced_nodes_set)
                 print(f"Iteration {iteration}: {set(influenced_nodes)}")
                 iteration += 1
                 states = new_states

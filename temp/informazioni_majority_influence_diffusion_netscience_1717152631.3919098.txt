@@ -1,3 +1,0 @@
-Numero di nodi influenzati: 2
-989
-972

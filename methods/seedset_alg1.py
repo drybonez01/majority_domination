@@ -4,7 +4,6 @@ import os
 
 def seedset_alg1(graph_file, cost_file, working_dir):
     def load_graph(filename):
-        # Carica il grafo dal file .gml usando networkx con label='id'
         g = nx.read_gml(filename, label='id')
         return g
 
@@ -14,7 +13,7 @@ def seedset_alg1(graph_file, cost_file, working_dir):
             for line in file:
                 parts = line.strip().split()
                 if len(parts) != 2:
-                    continue  # Ignora le righe non valide
+                    continue
                 try:
                     node = parts[0]
                     cost = float(parts[1])
@@ -36,21 +35,17 @@ def seedset_alg1(graph_file, cost_file, working_dir):
         Sd = set()
         total_cost = 0
 
-        N = {v: set(G.neighbors(v)) for v in G.nodes}  # Dizionario dei vicini per ogni nodo
+        N = {v: set(G.neighbors(v)) for v in G.nodes}
 
         while True:
-            # Trova il nodo che massimizza il beneficio per costo
             u = max((v for v in G.nodes if v not in Sd),
                     key=lambda v: (f1(Sd.union({v}), G.nodes, N) - f1(Sd, G.nodes, N)) / c[str(v)])
 
-            # Calcola il costo totale se aggiungiamo questo nodo
             node_cost = c[str(u)]
 
-            # Verifica se l'aggiunta di questo nodo supera il budget
             if total_cost + node_cost > k:
                 break
 
-            # Aggiungi il nodo al seed set
             Sp.add(u)
             Sd.add(u)
             total_cost += node_cost

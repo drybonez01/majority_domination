@@ -26,7 +26,6 @@ def seedset_alg2(graph_file, cost_file, working_dir):
         total_cost = 0
 
         while U:
-            # Case 1: Find a vertex v in U such that k(v) = 0
             zero_threshold_nodes = {v for v in U if k_v[v] == 0}
             if zero_threshold_nodes:
                 v = zero_threshold_nodes.pop()
@@ -35,7 +34,6 @@ def seedset_alg2(graph_file, cost_file, working_dir):
                     k_v[u] = max(0, k_v[u] - 1)
                 continue
 
-            # Case 2: Find a vertex v in U such that δ(v) = 0
             zero_degree_nodes = {v for v in U if G.degree(v) == 0}
             if zero_degree_nodes:
                 v = zero_degree_nodes.pop()
@@ -46,7 +44,6 @@ def seedset_alg2(graph_file, cost_file, working_dir):
                     k_v[u] = max(0, k_v[u] - 1)
                 continue
 
-            # Case 3: Select the vertex v that maximizes δ(v) / c(v)
             if total_cost >= k:
                 break
 

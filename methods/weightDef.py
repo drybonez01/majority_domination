@@ -39,9 +39,6 @@ def weightDef(graph_path, working_dir):
     print("\nNumero di nodi:", g.number_of_nodes())
     print("Numero di archi:", g.number_of_edges())
 
-    '''for n in g.nodes():
-        print(f"Nodo {n} ha {g.degree(n)} archi")'''
-
     node_weights = None
     file_suffix = None
     while True:
@@ -65,10 +62,6 @@ def weightDef(graph_path, working_dir):
             break
         else:
             print("Metodo non valido. Riprovare.")
-
-    '''print("\nPesi assegnati ai nodi:")
-    for n_id, w in node_weights.items():
-        print(f"Nodo {n_id}: Peso {w}")'''
 
     graph_name = os.path.splitext(os.path.basename(graph_path))[0]
     weights_file_name = f"{graph_name}_node_weights_{file_suffix}.txt"

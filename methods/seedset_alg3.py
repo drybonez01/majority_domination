@@ -26,9 +26,6 @@ def seedset_alg3(graph_file, cost_file, working_dir):
         return costs
 
     def influence_spread(G, S, R):
-        """
-        Stima la diffusione dell'influenza nel grafo G a partire dal seed set S usando R simulazioni.
-        """
         influenced_counts = []
         for _ in range(R):
             new_active = set(S)
