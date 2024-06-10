@@ -79,7 +79,7 @@ def seedset_alg3(graph_file, cost_file, working_dir):
         return file_path
 
     k = float(input("\nInserisci il valore di k (budget): "))
-    R = int(input("Inserisci il numero di mondi possibili campionati (R): "))
+    R = int(input("Inserisci il numero di iterazioni (R): "))
 
     G = load_graph(graph_file)
     costs = load_costs(cost_file)
